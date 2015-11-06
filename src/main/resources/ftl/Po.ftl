@@ -5,12 +5,12 @@ import ${utilPackage}.base.model.BaseModel;
 public class ${typeName} extends BaseModel {
 
     private static final long serialVersionUID = 1L;
-
     <#list table.columnList as col>
+
     private ${col.colJavaType} ${col.colJavaName};
-    
     </#list>
     <#list table.columnList as col>
+
     public ${col.colJavaType} get${col.colGetSetName}() {
         return ${col.colJavaName};
     }

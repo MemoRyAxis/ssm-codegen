@@ -133,7 +133,7 @@
         </if>
     </select>
 
-    <select id="getCount">
+    <select id="getCount" resultType="int">
         SELECT COUNT(*) FROM 
             ${table.tableName}
         <include refid="dynamicWhere" />
