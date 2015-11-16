@@ -12,4 +12,5 @@ public class ${typeName}Dao extends BaseDao<${typeName}, ${pkCol.colJavaType}> {
     public Class<${typeName}> getEntityClass() {
         return ${typeName}.class;
     }
+
 }

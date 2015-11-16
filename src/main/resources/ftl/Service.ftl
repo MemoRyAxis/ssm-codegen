@@ -18,4 +18,5 @@ public class ${typeName}Service extends BaseService<${typeName}, ${pkCol.colJava
     protected BaseDao<${typeName}, ${pkCol.colJavaType}> getBaseDao() {
         return this.${typeNameLowerCase}Dao;
     }
+
 }

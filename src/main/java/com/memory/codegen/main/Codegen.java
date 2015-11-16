@@ -1,9 +1,5 @@
 package com.memory.codegen.main;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.memory.codegen.model.ColumnModel;
 import com.memory.codegen.model.TableModel;
 import com.memory.codegen.util.FreeMarkerUtil;
@@ -11,34 +7,37 @@ import com.memory.codegen.util.MySqlHelper;
 import com.memory.codegen.util.NiceUtil;
 import com.memory.codegen.util.PropertiesUtil;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * main
- * 
+ *
  * @author memoryaxis@gmail.com
  */
 public class Codegen {
 
-    private static final String sep = System.getProperty("file.separator");
+    private static final String SEP = System.getProperty("file.separator");
 
-    private static final String[] MAVEN_FOLDERS = new String[] {"java", "resources", "webapp"};
     private static final String MAVEN_$ = "$m";
-
-    private static final String[] LAYER_FOLDERS = new String[] {"Po", "Dao", "Service",
-            "Controller", "Mapper"}; // , "view"};
-    // TODO controller HTML
+    private static final String[] MAVEN_FOLDERS = new String[]{"java", "resources"}; // , "webapp"};
 
     private static final String LAYERS_$ = "$c";
+    private static final String[] LAYER_TYPES = new String[]{"Po", "Dao", "MapperDao", "Service", "Controller", "MapperXML"}; // , "view"};
+    private static final String[] LAYER_FOLDER = new String[]{"po", "dao", "mapper", "service", "controller", "mapper"}; // , "view"};
+    private static final String[] LAYER_SUFFIX = new String[]{".java", "Dao.java", "Mapper.java", "Service.java", "Controller.java", "Mapper.xml"}; // , "view"};
 
     public static void main(String[] args) throws Exception {
 
         String projectPath = getProjectPath();
+        if (NiceUtil.isEmptyString(projectPath)) {
+            return;
+        }
 
-        String packagePath = "";
-        try {
-            int projectType = PropertiesUtil.getIntegerValue("project.type");
-            packagePath = getPackagePath(projectType);
-        } catch (Exception e) {
-            packagePath = getPackagePath(1);
+        String packagePath = getPackagePath();
+        if (NiceUtil.isEmptyString(packagePath)) {
+            return;
         }
 
         String codeGenPath = projectPath + packagePath;
@@ -52,17 +51,17 @@ public class Codegen {
             String typeName = model.split(":")[1];
             TableModel table = helper.getTableInfo(tableName);
 
-            for (String codeFolder : LAYER_FOLDERS) {
+            for (int i = 0; i < LAYER_TYPES.length; i++) {
+                String layerType = LAYER_TYPES[i];
+                String layerFolder = LAYER_FOLDER[i];
+                String layerSuffix = LAYER_SUFFIX[i];
 
-                String dir = codeGenPath.replace(LAYERS_$, codeFolder.toLowerCase());
+                String dir = codeGenPath.replace(LAYERS_$, layerFolder);
 
-                String suffix;
-                if (codeFolder.equals("Mapper")) {
+                if (layerType.equals("MapperXML")) {
                     dir = dir.replace(MAVEN_$, MAVEN_FOLDERS[1]);
-                    suffix = ".xml";
                 } else {
                     dir = dir.replace(MAVEN_$, MAVEN_FOLDERS[0]);
-                    suffix = ".java";
                 }
 
                 File dirF = new File(dir);
@@ -75,7 +74,7 @@ public class Codegen {
                 params.put("typeNameLowerCase",
                         typeName.substring(0, 1).toLowerCase() + typeName.substring(1));
                 params.put("mainPackage", PropertiesUtil.getStringValue("main.package.name"));
-                params.put("subPackage", PropertiesUtil.getStringValue("sub.package.name"));
+                params.put("subPackage", PropertiesUtil.getStringValue("module.package.name"));
                 params.put("utilPackage", PropertiesUtil.getStringValue("util.package.name"));
                 params.put("table", table);
 
@@ -85,17 +84,17 @@ public class Codegen {
                     }
                 }
 
-                String fileName =
-                        dir + typeName + (codeFolder.equals("Po") ? "" : codeFolder) + suffix;
-
-                FreeMarkerUtil.genFileByTemplate(fileName, NiceUtil.getResourcesPath("ftl"),
-                        codeFolder + ".ftl", params);
+                String fileName = dir + typeName + layerSuffix;
+                FreeMarkerUtil.genFileByTemplate(fileName, NiceUtil.getResourcesPath("ftl"), layerType + ".ftl", params);
             }
         }
 
         helper.destory();
     }
 
+    /**
+     * get project absolute path of project
+     */
     private static String getProjectPath() {
 
         StringBuilder projectPath;
@@ -103,6 +102,7 @@ public class Codegen {
         String exportDir = PropertiesUtil.getStringValue("export.dir");
         if (NiceUtil.isEmptyString(exportDir)) {
             System.err.println("\t-> export dir can not be empty!");
+            return "";
         }
         projectPath = new StringBuilder(exportDir);
 
@@ -110,48 +110,65 @@ public class Codegen {
         if (NiceUtil.isEmptyString(projectName)) {
             System.err.println("\t-> project name can not be empty!");
         }
-        projectPath.append(projectName).append(sep);
+        projectPath.append(projectName).append(SEP);
 
         String projectBuildType = PropertiesUtil.getStringValue("project.build.type");
-        if (projectBuildType.equals("maven")) {
-            projectPath.append("src").append(sep).append("main").append(sep).append(MAVEN_$)
-                    .append(sep);
+        if (NiceUtil.isEmptyString(projectBuildType) || projectBuildType.equals("maven")) {
+            projectPath.append("src").append(SEP).append("main").append(SEP).append(MAVEN_$)
+                    .append(SEP);
         } else {
             // TODO others
+            System.err.println("\t-> build failed!");
+            return "";
         }
 
         return projectPath.toString();
     }
 
-    private static String getPackagePath(int projectType) {
+    /**
+     * get package path
+     */
+    private static String getPackagePath() {
+
+        int projectType = 0;
+        try {
+            projectType = PropertiesUtil.getIntegerValue("project.structure");
+        } catch (Exception e) {
+            System.err.println("\t-> project structure should be a number!");
+            return "";
+        }
 
         String projectName = PropertiesUtil.getStringValue("project.name");
         if (NiceUtil.isEmptyString(projectName)) {
             System.err.println("\t-> project name can not be empty!");
+            return "";
         }
 
         StringBuilder packagePath = new StringBuilder("");
-        String companyName = PropertiesUtil.getStringValue("main.package.name");
-        if (!NiceUtil.isEmptyString(companyName)) {
-            for (String packageName : companyName.split("\\.")) {
-                packagePath.append(packageName).append(sep);
+
+        String mainPackage = PropertiesUtil.getStringValue("main.package.name");
+        if (!NiceUtil.isEmptyString(mainPackage)) {
+            for (String packageName : mainPackage.split("\\.")) {
+                packagePath.append(packageName).append(SEP);
             }
         } else {
-            packagePath.append("com").append(projectName).append(sep);
+            System.err.println("\t-> main package name can not be empty!");
+            return "";
         }
 
         StringBuilder modulePackage = new StringBuilder();
-        String moduleNames = PropertiesUtil.getStringValue("sub.package.name");
+
+        String moduleNames = PropertiesUtil.getStringValue("module.package.name");
         if (!NiceUtil.isEmptyString(moduleNames)) {
             for (String moduleName : moduleNames.split("\\.")) {
-                modulePackage.append(moduleName).append(sep);
+                modulePackage.append(moduleName).append(SEP);
             }
         }
 
         if (projectType == 2) {
-            packagePath.append(LAYERS_$).append(sep).append(modulePackage);
+            packagePath.append(modulePackage).append(LAYERS_$).append(SEP);
         } else {
-            packagePath.append(modulePackage).append(LAYERS_$).append(sep);
+            packagePath.append(LAYERS_$).append(SEP).append(modulePackage);
         }
 
         return packagePath.toString();

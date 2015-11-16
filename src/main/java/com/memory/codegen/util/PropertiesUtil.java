@@ -7,7 +7,7 @@ import java.util.Properties;
 
 /**
  * load properties configuration file
- * 
+ *
  * @author memoryaxis@gmail.com
  */
 public class PropertiesUtil {
@@ -36,7 +36,11 @@ public class PropertiesUtil {
     }
 
     public static String getStringValue(String key) {
-        return ((String) properties.getProperty(key)).trim();
+        try {
+            return ((String) properties.getProperty(key)).trim();
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     public static boolean getBooleanValue(String key) {

@@ -46,7 +46,7 @@ public class ${typeName}Controller extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value = {"/save", "/{id}"}, method = RequestMethod.POST)
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(${typeName} ${typeNameLowerCase}) {
 
         int result;
@@ -89,4 +89,5 @@ public class ${typeName}Controller extends BaseController {
         return ${pkCol.colJavaName} == null ? responseJson(FAILURE) :
                 (${typeNameLowerCase}Service.delById(${pkCol.colJavaName}) != 1 ? responseJson(FAILURE) : responseJson(SUCCESS));
     }
+
 }

@@ -36,6 +36,7 @@ public class MySqlHelper {
 
     public synchronized void init() {
         try {
+            // TODO: 2015/11/16 update data source
             dataSource = new DruidDataSource();
             dataSource.setDriverClassName(PropertiesUtil
                     .getStringValue("jdbc.base.driverClassName"));

@@ -19,4 +19,5 @@ public class ${typeName} extends BaseModel {
         this.${col.colJavaName} = ${col.colJavaName};
     }
     </#list>
+
 }
