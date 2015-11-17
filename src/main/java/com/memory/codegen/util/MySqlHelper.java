@@ -1,5 +1,11 @@
 package com.memory.codegen.util;
 
+import com.memory.codegen.constant.SQL;
+import com.memory.codegen.model.ColumnModel;
+import com.memory.codegen.model.TableModel;
+
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,62 +13,38 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.alibaba.druid.pool.DruidDataSource;
-import com.memory.codegen.constant.SQL;
-import com.memory.codegen.model.ColumnModel;
-import com.memory.codegen.model.TableModel;
-
 /**
  * MySql utility
- * 
+ *
  * get table or column information
- * 
+ *
  * get javaType or jdbcType by dbType
- * 
+ *
  * @author memoryaxis@gmail.com
  */
 public class MySqlHelper {
 
     private Connection conn;
 
-    private DruidDataSource dataSource;
+    private DriverManagerDataSource dataSource;
 
     private static MySqlHelper mySqlHelper;
 
     public static synchronized MySqlHelper getInstance() {
-        if (mySqlHelper == null) mySqlHelper = new MySqlHelper();
-        return mySqlHelper;
+        return mySqlHelper == null ? mySqlHelper = new MySqlHelper() : mySqlHelper;
     }
 
     public synchronized void init() {
         try {
-            // TODO: 2015/11/16 update data source
-            dataSource = new DruidDataSource();
-            dataSource.setDriverClassName(PropertiesUtil
-                    .getStringValue("jdbc.base.driverClassName"));
+            dataSource = new DriverManagerDataSource();
+
+            dataSource.setDriverClassName(PropertiesUtil.getStringValue("jdbc.base.driverClassName"));
             dataSource.setUrl(PropertiesUtil.getStringValue("jdbc.base.url"));
             dataSource.setUsername(PropertiesUtil.getStringValue("jdbc.base.username"));
             dataSource.setPassword(PropertiesUtil.getStringValue("jdbc.base.password"));
-            dataSource.setFilters("config");
-
-            // encrypt password
-            // dataSource.setConnectionProperties("config.decrypt=true");
-
-            // other parameters
-            // ...
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void destory() {
-        try {
-            this.conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        this.dataSource.close();
     }
 
     private synchronized Connection getConnection() {

@@ -88,8 +88,6 @@ public class Codegen {
                 FreeMarkerUtil.genFileByTemplate(fileName, NiceUtil.getResourcesPath("ftl"), layerType + ".ftl", params);
             }
         }
-
-        helper.destory();
     }
 
     /**
