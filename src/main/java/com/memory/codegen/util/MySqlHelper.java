@@ -1,5 +1,6 @@
 package com.memory.codegen.util;
 
+import com.memory.codegen.constant.MySQLTypesMapping;
 import com.memory.codegen.constant.SQL;
 import com.memory.codegen.model.ColumnModel;
 import com.memory.codegen.model.TableModel;
@@ -15,9 +16,9 @@ import java.util.List;
 
 /**
  * MySql utility
- *
+ * <p>
  * get table or column information
- *
+ * <p>
  * get javaType or jdbcType by dbType
  *
  * @author memoryaxis@gmail.com
@@ -34,14 +35,14 @@ public class MySqlHelper {
         return mySqlHelper == null ? mySqlHelper = new MySqlHelper() : mySqlHelper;
     }
 
-    public synchronized void init() {
+    public synchronized void init(String driver, String url, String username, String password) {
         try {
             dataSource = new DriverManagerDataSource();
 
-            dataSource.setDriverClassName(PropertiesUtil.getStringValue("jdbc.base.driverClassName"));
-            dataSource.setUrl(PropertiesUtil.getStringValue("jdbc.base.url"));
-            dataSource.setUsername(PropertiesUtil.getStringValue("jdbc.base.username"));
-            dataSource.setPassword(PropertiesUtil.getStringValue("jdbc.base.password"));
+            dataSource.setDriverClassName(driver);
+            dataSource.setUrl(url);
+            dataSource.setUsername(username);
+            dataSource.setPassword(password);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -127,13 +128,13 @@ public class MySqlHelper {
                 + getGetSetName(columnName).substring(1);
     }
 
-    private String getJavaType(String dbType, int precision, int scale) {
+    private static String getJavaType(String dbType, int precision, int scale) {
         if (dbType.equals("bigint")) return "Long";
         if (dbType.equals("int")) return "Integer";
         if (dbType.equals("tinyint") || dbType.equals("smallint")) return "Short";
         if (dbType.endsWith("char") || dbType.endsWith("text")) return "String";
-        if (dbType.equals("double")) return "Double";
-        if (dbType.equals("float")) return "Float";
+        if (dbType.equals("double")) return "java.math.BigDecimal";
+        if (dbType.equals("float")) return "java.math.BigDecimal";
         if (dbType.endsWith("blob")) return "byte[]";
         if (dbType.equals("decimal")) {
             if (scale == 0) {
@@ -142,7 +143,7 @@ public class MySqlHelper {
                 else
                     return "Long";
             } else {
-                return "Double";
+                return "java.math.BigDecimal";
             }
         }
         if (dbType.startsWith("date") || dbType.startsWith("time")) {
@@ -151,8 +152,8 @@ public class MySqlHelper {
         return dbType;
     }
 
-    private String getJdbcType(String dbType) {
-        if (dbType.contains("int") || dbType.equals("float") || dbType.equals("decimal"))
+    private static String getJdbcType(String dbType) {
+        if (dbType.contains("int") || dbType.equals("double") || dbType.equals("float") || dbType.equals("decimal"))
             return "NUMERIC";
         if (dbType.contains("lob") || dbType.contains("text") || dbType.contains("char"))
             return "VARCHAR";
@@ -166,4 +167,28 @@ public class MySqlHelper {
         if (dbtype.equals("decimal")) return "decimal(" + precision + "," + scale + ")";
         return dbtype;
     }
+
+
+    public static void main(String[] args) {
+        String[] dbtypes = new String[]{
+                "int",
+                "double",
+                "varchar",
+                "char",
+                "decimal",
+                "text",
+                "bigint",
+                "tinyint",
+                "char",
+                "date",
+                "datetime",
+                "timestamp",
+        };
+
+        for (String dbType : dbtypes) {
+            MySQLTypesMapping mySQLTypesMapping = MySQLTypesMapping.fromDbType(dbType);
+            System.out.printf("%s\t%s\t%s\t%s\t%s\n", dbType, mySQLTypesMapping.getJdbcType(), getJdbcType(dbType), mySQLTypesMapping.getJavaType(), getJavaType(dbType, 0, 0));
+        }
+    }
+
 }

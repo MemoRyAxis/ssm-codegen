@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="${mainPackage}.${subPackage}.po.${typeName}">
+<mapper namespace="${mainPackage}${subPackage}mapper.${typeName}Mapper">
     <#assign colLen=table.colMaxLen />
     <#assign colLen2=table.colMaxLen + 5/>
 
-    <resultMap id="${typeName}" type="${mainPackage}.${subPackage}.po.${typeName}">
+    <resultMap id="${typeName}" type="${mainPackage}${subPackage}po.${typeName}">
     <#list table.columnList as col>
     <#if (col.isPk)>
         <id     column=${ws_(col.colName, colLen, 21)} property=${ws_(col.colJavaName, colLen, 21)} jdbcType="${col.colJdbcType}" />
@@ -34,7 +34,7 @@
         </where>
     </sql>
 
-    <insert id="add" parameterType="${mainPackage}.${subPackage}.po.${typeName}">
+    <insert id="add" parameterType="${mainPackage}${subPackage}po.${typeName}">
         INSERT INTO
             ${table.tableName}
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -54,7 +54,7 @@
         </trim>
     </insert>
 
-    <insert id="addAll" parameterType="${mainPackage}.${subPackage}.po.${typeName}">
+    <insert id="addAll" parameterType="${mainPackage}${subPackage}po.${typeName}">
         INSERT INTO 
             ${table.tableName}
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -81,7 +81,7 @@
             ${pkCol.colName} = <#noparse>#{</#noparse>${pkCol.colJavaName}<#noparse>}</#noparse>
     </delete>
     
-    <update id="update" parameterType="${mainPackage}.${subPackage}.po.${typeName}">
+    <update id="update" parameterType="${mainPackage}${subPackage}po.${typeName}">
         UPDATE 
             ${table.tableName} 
         <trim prefix="SET" suffixOverrides=",">
@@ -95,7 +95,7 @@
             ${pkCol.colName} = <#noparse>#{</#noparse>${pkCol.colJavaName}<#noparse>}</#noparse>
     </update>
     
-    <update id="updateAll" parameterType="${mainPackage}.${subPackage}.po.${typeName}">
+    <update id="updateAll" parameterType="${mainPackage}${subPackage}po.${typeName}">
         UPDATE 
             ${table.tableName} 
         SET 

@@ -1,6 +1,6 @@
-package ${mainPackage}.${subPackage}.po;
+package ${mainPackage}${subPackage!}po;
 
-import ${utilPackage}.base.model.BaseModel;
+import ${utilPackage}base.model.BaseModel;
 
 public class ${typeName} extends BaseModel {
 

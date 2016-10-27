@@ -1,4 +1,4 @@
-package ${mainPackage}.${subPackage}.controller;
+package ${mainPackage}${subPackage}controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import ${utilPackage}.base.web.BaseController;
-import ${mainPackage}.${subPackage}.service.${typeName}Service;
-import ${mainPackage}.${subPackage}.po.${typeName};
+import ${utilPackage}base.web.BaseController;
+import ${mainPackage}${subPackage}service.${typeName}Service;
+import ${mainPackage}${subPackage}po.${typeName};
 
 @Controller
 @RequestMapping(value = "/${typeNameLowerCase}", produces = "application/json;charset=utf-8")

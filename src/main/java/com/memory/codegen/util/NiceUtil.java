@@ -16,6 +16,8 @@ import java.util.Map;
  */
 public class NiceUtil {
 
+    public static final String SEP = System.getProperty("file.separator");
+
     private static long autoIncrease = 1;
 
     public static long getIncreaseLong() {
