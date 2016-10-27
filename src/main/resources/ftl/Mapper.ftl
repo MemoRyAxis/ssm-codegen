@@ -10,20 +10,20 @@ import ${mainPackage}${subPackage}po.${typeName};
 @Repository
 public interface ${typeName}Mapper {
 
-    public Integer add(${typeName});
+    Integer add(${typeName} ${typeNameLowerCase});
 
-    public Integer addAll(${typeName});
+    Integer addAll(${typeName} ${typeNameLowerCase});
 
-    public Integer delById(Integer id);
+    Integer delById(Integer id);
 
-    public Integer update();
+    Integer update(${typeName} ${typeNameLowerCase});
 
-    public Integer updateAll();
+    Integer updateAll(${typeName} ${typeNameLowerCase});
 
-    public ${typeName} getById(Integer id);
+    ${typeName} getById(Integer id);
 
-    public List<${typeName}> getAll(Map<String, Object> params);
+    List<${typeName}> getAll(Map<String, Object> params);
 
-    public Integer getCount(Map<String, Object> params);
+    Integer getCount(Map<String, Object> params);
 
 }

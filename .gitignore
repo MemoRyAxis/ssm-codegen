@@ -1,3 +1,6 @@
+# Config
+*.yml
+
 # Maven
 target/
 *.ser
