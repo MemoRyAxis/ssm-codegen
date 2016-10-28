@@ -26,4 +26,8 @@ public interface ${typeName}Mapper {
 
     Integer getCount(Map<String, Object> params);
 
+    List<${typeName}> getAll(${typeName} ${typeNameLowerCase});
+
+    Integer getCount(${typeName} ${typeNameLowerCase});
+
 }
