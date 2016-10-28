@@ -14,13 +14,17 @@ public interface ${typeName}Mapper {
 
     Integer addAll(${typeName} ${typeNameLowerCase});
 
+    <#if (pkCol)??>
     Integer delById(Integer id);
+    </#if>
 
     Integer update(${typeName} ${typeNameLowerCase});
 
     Integer updateAll(${typeName} ${typeNameLowerCase});
 
+    <#if (pkCol)??>
     ${typeName} getById(Integer id);
+    </#if>
 
     List<${typeName}> getAll(Map<String, Object> params);
 
