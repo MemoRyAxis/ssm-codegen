@@ -2,12 +2,16 @@ package ${mainPackage}${subPackage!}po;
 
 import ${utilPackage}model.BaseModel;
 
+/**
+ * <#if table.tabComment != "">${table.tabComment}</#if>
+ */
 public class ${typeName} extends BaseModel {
 
     private static final long serialVersionUID = 1L;
     <#list table.columnList as col>
         <#if col.colJavaType=="java.util.Date">
 
+    // ${col.comment}
     private ${col.colJavaType} ${col.colJavaName};
 
     private ${col.colJavaType} start${col.colGetSetName};
@@ -15,6 +19,9 @@ public class ${typeName} extends BaseModel {
     private ${col.colJavaType} end${col.colGetSetName};
         <#else>
 
+        <#if col.comment != "">
+    // ${col.comment}
+        </#if>
     private ${col.colJavaType} ${col.colJavaName};
         </#if>
     </#list>
