@@ -12,7 +12,7 @@ import freemarker.template.TemplateModelException;
 
 /**
  * simple freemarker utility
- * 
+ *
  * @author memoryaxis@gmail.com
  */
 @SuppressWarnings("deprecation")
@@ -21,10 +21,27 @@ public class FreeMarkerUtil {
     private static Configuration config;
 
     public static void genFileByTemplate(String filePath, String tempDir, String tempName,
-            Map<String, Object> params) {
+                                         Map<String, Object> params) {
         try {
             config.setDirectoryForTemplateLoading(new File(tempDir));
             Template template = config.getTemplate(tempName);
+            File file = new File(filePath);
+//            if (file.exists()) {
+//                System.out.println("\t-> file is already exists!");
+//                boolean removeSuccess = false;
+//                int flag = 0;
+//                while (!removeSuccess) {
+//                    flag++;
+//                    File fileBak = new File(filePath + ".bak" + flag);
+//                    if (fileBak.exists()) continue;
+//                    removeSuccess = file.renameTo(fileBak);
+//                }
+//                System.out.println("\t-> overwrite file: " + filePath);
+//                FileWriter out = new FileWriter(filePath);
+//                params.put("ws_", new WhiteSpaceTMM());
+//                template.process(params, out);
+//            } else {
+//            }
             System.out.println("\t-> generate file: " + filePath);
             FileWriter out = new FileWriter(filePath);
             params.put("ws_", new WhiteSpaceTMM());

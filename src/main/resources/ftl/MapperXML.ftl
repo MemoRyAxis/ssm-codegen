@@ -8,7 +8,10 @@
     <#list table.columnList as col>
     <#if (col.isPk)>
         <id     column=${ws_(col.colName, colLen, 21)} property=${ws_(col.colJavaName, colLen, 21)} jdbcType="${col.colJdbcType}" />
-    <#else>
+    </#if>
+    </#list>
+    <#list table.columnList as col>
+    <#if (!col.isPk)>
         <result column=${ws_(col.colName, colLen, 21)} property=${ws_(col.colJavaName, colLen, 21)} jdbcType="${col.colJdbcType}" />
     </#if>
     </#list>
@@ -24,9 +27,9 @@
             <#if col.colJavaType=="String">
             <if test=${ws_(col.colJavaName, colLen2, 22)} != null"> AND ${ws_(col.colName, colLen, 20)} ${ws_("LIKE", 5, 20)} <#noparse>#{</#noparse>${col.colJavaName}} </if>
             <#elseif col.colJavaType=="java.util.Date">
-            <if test=${ws_(col.colJavaName, colLen2, 22)} != null"> AND ${ws_(col.colName, colLen, 20)} ${ws_("=", 5, 20)} <#noparse>#{</#noparse>${col.colJavaName}, jdbcType=DATE} </if>
-            <if test=${ws_("start" + col.colGetSetName, colLen2, 22)} != null"> AND ${ws_(col.colName, colLen, 20)} ${ws_("&gt;=", 5, 20)} <#noparse>#{</#noparse>${col.colJavaName}, jdbcType=DATE} </if>
-            <if test=${ws_("end" + col.colGetSetName, colLen2, 22)} != null"> AND ${ws_(col.colName, colLen, 20)} ${ws_("&lt;=", 5, 20)} <#noparse>#{</#noparse>${col.colJavaName}, jdbcType=DATE} </if>
+            <if test=${ws_(col.colJavaName, colLen2, 22)} != null"> AND ${ws_(col.colName, colLen, 20)} ${ws_("=", 5, 20)} <#noparse>#{</#noparse>${col.colJavaName}} </if>
+            <if test=${ws_("start" + col.colGetSetName, colLen2, 22)} != null"> AND ${ws_(col.colName, colLen, 20)} ${ws_("&gt;=", 5, 20)} <#noparse>#{</#noparse>start${col.colGetSetName}} </if>
+            <if test=${ws_("end" + col.colGetSetName, colLen2, 22)} != null"> AND ${ws_(col.colName, colLen, 20)} ${ws_("&lt;=", 5, 20)} <#noparse>#{</#noparse>end${col.colGetSetName}} </if>
             <#else>
             <if test=${ws_(col.colJavaName, colLen2, 22)} != null"> AND ${ws_(col.colName, colLen, 20)} ${ws_("=", 5, 20)} <#noparse>#{</#noparse>${col.colJavaName}} </if>
             </#if>
@@ -144,7 +147,7 @@
             ${table.tableName}
         <include refid="dynamicWhere" />
         <if test="orderStack != null">
-            ORDER BY
+        ORDER BY
             <foreach item="orderField" collection="orderStack" separator=",">
                 <#noparse>#{</#noparse>orderField.orderField<#noparse>}</#noparse> <#noparse>#{</#noparse>orderField.orderSeq<#noparse>}</#noparse>
             </foreach>

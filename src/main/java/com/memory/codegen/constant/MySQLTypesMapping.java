@@ -21,10 +21,10 @@ public enum MySQLTypesMapping {
     FLOAT("FLOAT", "FLOAT", "java.math.BigDecimal"), // "Float"),
     DOUBLE("DOUBLE", "DOUBLE", "java.math.BigDecimal"), // "Double"),
     DECIMAL("DECIMAL", "DECIMAL", "java.math.BigDecimal"),
-    DATE("DATE", "DATE", "java.util.Date"),
-    DATETIME("DATETIME", "DATE", "java.util.Date"),
+    DATE("DATE", "TIMESTAMP", "java.util.Date"), // jdbcType=DATE
+    DATETIME("DATETIME", "TIMESTAMP", "java.util.Date"), // jdbcType=DATETIME
     TIMESTAMP("TIMESTAMP", "TIMESTAMP", "java.util.Date"),
-    TIME("TIME", "TIME", "java.util.Date"),
+    TIME("TIME", "TIMESTAMP", "java.util.Date"), // jdbcType=TIMESTAMP
     CHAR("CHAR", "CHAR", "String"),
     VARCHAR("VARCHAR", "VARCHAR", "String"),
     BINARY("BINARY", "BINARY", "byte[]"),

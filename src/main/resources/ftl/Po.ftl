@@ -33,7 +33,7 @@ public class ${typeName} extends BaseModel {
         return start${col.colGetSetName};
     }
 
-    public void setStart${col.colGetSetName}(${col.colJavaType} ${col.colJavaName}) {
+    public void setStart${col.colGetSetName}(${col.colJavaType} start${col.colGetSetName}) {
         this.start${col.colGetSetName} = start${col.colGetSetName};
     }
 
@@ -41,7 +41,7 @@ public class ${typeName} extends BaseModel {
         return end${col.colGetSetName};
     }
 
-    public void setEnd${col.colGetSetName}(${col.colJavaType} ${col.colJavaName}) {
+    public void setEnd${col.colGetSetName}(${col.colJavaType} end${col.colGetSetName}) {
         this.end${col.colGetSetName} = end${col.colGetSetName};
     }
         <#else>

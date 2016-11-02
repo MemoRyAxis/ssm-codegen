@@ -7,17 +7,7 @@ package com.memory.codegen.util.yaml;
  */
 public class Export {
 
-    String dir;
-
     Model[] models;
-
-    public String getDir() {
-        return dir;
-    }
-
-    public void setDir(String dir) {
-        this.dir = dir;
-    }
 
     public Model[] getModels() {
         return models;

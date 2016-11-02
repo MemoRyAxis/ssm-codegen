@@ -58,7 +58,7 @@ public class Codegen {
     private String getProjectPath() {
         StringBuilder projectPath;
 
-        String exportDir = config.getExport().getDir();
+        String exportDir = config.getProject().getHome();
         if (NiceUtil.isEmptyString(exportDir)) {
             System.err.println("\t-> export dir can not be empty!");
         }
@@ -68,8 +68,7 @@ public class Codegen {
         if (NiceUtil.isEmptyString(projectName)) {
             System.err.println("\t-> project name can not be empty!");
         }
-        projectPath.append(projectName).append(NiceUtil.SEP)
-                .append("src").append(NiceUtil.SEP)
+        projectPath.append("src").append(NiceUtil.SEP)
                 .append("main").append(NiceUtil.SEP)
                 .append(MAVEN_$).append(NiceUtil.SEP);
 

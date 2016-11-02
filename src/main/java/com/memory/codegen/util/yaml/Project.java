@@ -7,6 +7,8 @@ package com.memory.codegen.util.yaml;
  */
 public class Project {
 
+    String home;
+
     String name;
 
     String buildTool;
@@ -16,6 +18,14 @@ public class Project {
     String modulePackage;
 
     String utilPackage;
+
+    public String getHome() {
+        return home;
+    }
+
+    public void setHome(String home) {
+        this.home = home;
+    }
 
     public String getModulePackage() {
         return modulePackage;
